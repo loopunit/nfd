@@ -107,7 +107,7 @@ static int AppendExtensionToSpecBuf( const char *ext, char *specBuf, size_t spec
     
     if ( strlen(specBuf) > 0 )
     {
-        strncat( specBuf, SEP, specBufLen - strlen(specBuf) - 1 );
+        strncat_s( specBuf, specBufLen, SEP, specBufLen - strlen(specBuf) - 1 );
         specBufLen += strlen(SEP);
     }
 
@@ -115,7 +115,7 @@ static int AppendExtensionToSpecBuf( const char *ext, char *specBuf, size_t spec
     int bytesWritten = sprintf_s( extWildcard, NFD_MAX_STRLEN, "*.%s", ext );
     assert( bytesWritten == strlen(ext)+2 );
     
-    strncat( specBuf, extWildcard, specBufLen - strlen(specBuf) - 1 );
+    strncat_s( specBuf, specBufLen, extWildcard, specBufLen - strlen(specBuf) - 1 );
 
     return NFD_OKAY;
 }
@@ -367,6 +367,8 @@ nfdresult_t NFD_OpenDirectoryDialog( const char *filterList,
 	
     nfdresult_t nfdResult = NFD_ERROR;
     
+    ::IFileOpenDialog *fileOpenDialog(NULL);
+    
     // Init COM library.
     HRESULT result = ::CoInitializeEx(NULL,
                                       ::COINIT_APARTMENTTHREADED |
@@ -377,7 +379,6 @@ nfdresult_t NFD_OpenDirectoryDialog( const char *filterList,
         goto end;
     }
 
-    ::IFileOpenDialog *fileOpenDialog(NULL);
 
     // Create dialog
     result = ::CoCreateInstance(::CLSID_FileOpenDialog, NULL,
@@ -470,6 +471,8 @@ nfdresult_t NFD_OpenDialog( const char *filterList,
 {
     nfdresult_t nfdResult = NFD_ERROR;
     
+    ::IFileOpenDialog *fileOpenDialog(NULL);
+    
     // Init COM library.
     HRESULT result = ::CoInitializeEx(NULL,
                                       ::COINIT_APARTMENTTHREADED |
@@ -480,7 +483,6 @@ nfdresult_t NFD_OpenDialog( const char *filterList,
         goto end;
     }
 
-    ::IFileOpenDialog *fileOpenDialog(NULL);
 
     // Create dialog
     result = ::CoCreateInstance(::CLSID_FileOpenDialog, NULL,
